@@ -1,0 +1,82 @@
+#!/usr/bin/env ruby
+require 'thor'
+class Track < Thor
+
+  desc "status", "Show the existing status of the app."
+  def status
+    puts "..."
+  end
+
+  desc "settings :PARAMS", "Show or Set existing App's settings."
+  def settings(params=nil)
+    puts "..."
+  end
+
+  desc "show", "Show existing Clients."
+  def show
+    puts "..."
+  end
+
+  desc "use CLIENT_ID", "Select a client with the ID provided."
+  def use(client_id=nil)
+    puts "..."
+  end
+
+  desc "list", "List all the existing tasks of a selected client."
+  def list
+    puts "..."
+  end
+
+  desc "pick :TASK_ID", "Pick the task for any future manipulations."
+  def pick(task_id=nil)
+    puts "..."
+  end
+
+  desc "add :TEXT", "Add a new task and its description to a selected client."
+  def add(task_name=nil)
+    puts "..."
+  end
+
+  desc "del :TASK_ID", "Delete a task with the ID provided."
+  def delete(task_id=nil)
+    puts "..."
+  end
+
+  desc "start", "Start time tracking of a selected task."
+  def start
+    puts "..."
+  end
+
+  desc "stop", "Stop active time tracking."
+  def stop
+    puts "..."
+  end
+
+  desc "login", "Log in to the remote web interface."
+  def login
+    puts "..."
+  end
+
+  desc "logout", "Log out from the remote web interface."
+  def logout
+    puts "..."
+  end
+
+  desc "push", "Push logs or/and tasks to the remote web interface."
+  def push
+    puts "..."
+  end
+
+  desc "pull", "Pull clients or/and tasks from the remote web interface."
+  def pull
+    puts "..."
+  end
+
+  desc "logs :FULL", "Show Logs of the selected task or full logs of all the client tasks."
+  def logs(full=false)
+    puts "..."
+  end
+
+end
+
+Track.start(ARGV)
