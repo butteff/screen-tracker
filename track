@@ -1,7 +1,13 @@
 #!/usr/bin/env ruby
 require 'thor'
-class Track < Thor
+require 'rainbow'
+require_relative 'modules/database.rb'
+include Database
 
+class Track < Thor  
+  @@sqlt = Sqlt.new
+  @@COLOR_HEADER = 'sienna'
+  
   desc "status", "Show the existing status of the app."
   def status
     puts "..."
@@ -9,7 +15,7 @@ class Track < Thor
 
   desc "settings :PARAMS", "Show or Set existing App's settings."
   def settings(params=nil)
-    puts "..."
+    show_settings
   end
 
   desc "show", "Show existing Clients."
@@ -75,6 +81,18 @@ class Track < Thor
   desc "logs :FULL", "Show Logs of the selected task or full logs of all the client tasks."
   def logs(full=false)
     puts "..."
+  end
+
+  private
+
+  def show_settings
+    sql = 'select * from settings'
+    res = @@sqlt.read(sql)
+    url, is_shot, interval = res[0]
+    text = Rainbow("Logs Push URL: ").send(@@COLOR_HEADER).ljust(15)+url.to_s
+    text += "\n"+Rainbow("Screenshots: ").send(@@COLOR_HEADER).ljust(15) + enabled = is_shot == 1 ? 'enabled' : 'disabled'
+    text += "\n"+Rainbow("Interval: ").send(@@COLOR_HEADER).ljust(15)+interval.to_s+' mins between screenshots' if is_shot == 1
+    puts text
   end
 
 end
