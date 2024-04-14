@@ -1,12 +1,9 @@
 #!/usr/bin/env ruby
 require 'thor'
-require 'rainbow'
-require_relative 'modules/database.rb'
-include Database
+require_relative 'modules/iostream.rb'
+include Iostream
 
 class Track < Thor  
-  @@sqlt = Sqlt.new
-  @@COLOR_HEADER = 'sienna'
   
   desc "status", "Show the existing status of the app."
   def status
@@ -15,7 +12,7 @@ class Track < Thor
 
   desc "settings :PARAMS", "Show or Set existing App's settings."
   def settings(params=nil)
-    show_settings
+    io_print('settings')
   end
 
   desc "show", "Show existing Clients."
@@ -82,19 +79,7 @@ class Track < Thor
   def logs(full=false)
     puts "..."
   end
-
-  private
-
-  def show_settings
-    sql = 'select * from settings'
-    res = @@sqlt.read(sql)
-    url, is_shot, interval = res[0]
-    text = Rainbow("Logs Push URL: ").send(@@COLOR_HEADER).ljust(15)+url.to_s
-    text += "\n"+Rainbow("Screenshots: ").send(@@COLOR_HEADER).ljust(15) + enabled = is_shot == 1 ? 'enabled' : 'disabled'
-    text += "\n"+Rainbow("Interval: ").send(@@COLOR_HEADER).ljust(15)+interval.to_s+' mins between screenshots' if is_shot == 1
-    puts text
-  end
-
+  
 end
 
 Track.start(ARGV)

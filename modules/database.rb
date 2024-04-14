@@ -7,9 +7,13 @@ module Database
 
         def initialize
             @db = db_init
+            @db.results_as_hash = true
             query('create table if not exists settings (url varchar(64), is_shot boolean, interval int);')
             setup = read('select * from settings')
-            query("INSERT INTO settings (url, is_shot, interval) VALUES (?, ?, ?)", ["https://track.butteff.ru", 1, 5]) if setup.empty?
+            if setup.empty?
+                settings_default = {url: "https://track.butteff.ru", is_shot: 1, interval: 5}
+                query("INSERT INTO settings (url, is_shot, interval) VALUES (?, ?, ?)", [settings_default[:url], settings_default[:is_shot], settings_default[:interval]] )
+            end
         end
 
         def query(sql, data = nil)
