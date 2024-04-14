@@ -1,12 +1,17 @@
 require 'rainbow'
+require 'is_valid'
 require_relative './database.rb'
-require_relative './validation.rb'
 include Database
-include Validation
 
 module Iostream    
     @@sqlt = Sqlt.new
-    @@valid = ValidCheck.new
+    @@valid = IsValid.new({
+        settings: {
+            url: 'url',
+            is_shot: 'boolean',
+            interval: 'integer',
+        }
+    })
     @@COLOR_HEADER = 'coral'
     @@COLOR_KEY = 'plum'
     @@COLOR_ERROR = 'crimson'
