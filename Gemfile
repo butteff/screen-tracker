@@ -5,5 +5,5 @@ ruby "3.2.2"
 
 gem "thor"
 gem "sqlite3"
-gem "singleton"
+#gem "singleton"
 gem "rainbow"
