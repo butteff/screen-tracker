@@ -11,8 +11,9 @@ class Track < Thor
   end
 
   desc "settings :PARAMS", "Show or Set existing App's settings."
-  def settings(params=nil)
-    io_print('settings')
+  def settings(key=nil, value=nil)  
+    io_set_one('settings', key, value) if !key.nil? && !value.nil?
+    io_get('settings')
   end
 
   desc "show", "Show existing Clients."
