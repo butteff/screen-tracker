@@ -74,4 +74,8 @@ module Iostream
         text +="\n\n"
         puts text
     end
+
+    def print_clients(res)
+        p res
+    end
 end    

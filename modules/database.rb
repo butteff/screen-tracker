@@ -8,12 +8,45 @@ module Database
         def initialize
             @db = db_init
             @db.results_as_hash = true
-            query('create table if not exists settings (url varchar(64), is_shot boolean, interval int);')
+            # create tables:
+            query('create table if not exists settings (
+                url varchar(64), 
+                is_shot boolean, 
+                interval int
+            );')
+            query('create table if not exists clients (
+                id INTEGER PRIMARY KEY AUTOINCREMENT, 
+                name varchar(64)
+            );')
+            query('create table if not exists tasks (
+                id INTEGER PRIMARY KEY AUTOINCREMENT, 
+                client_id int, 
+                title varchar(128),
+                FOREIGN KEY(client_id) REFERENCES clients(id)
+            );')
+            # ============ 
+            
+            # add default settings:
             setup = read('select * from settings')
             if setup.empty?
-                settings = {url: "https://track.butteff.ru", is_shot: 1, interval: 55}        
+                settings = {url: "https://track.butteff.ru", is_shot: 1, interval: 55}
                 write('settings', settings)
             end
+            # ============
+
+            # fetch clients:
+            fetched_clients = [{id: 1, name: 'Google'}, {id: 2, name: 'Yandex'}] #to do some API to fetch
+            fetched_clients.each do |client_hash|
+                write('clients', client_hash)
+            end
+            #-------------
+
+            # fetch tasks:
+            fetched_tasks = [{id: 1, client_id: 1, title: 'upload some code to github'}] #to do some API to fetch
+            fetched_tasks.each do |task_hash|
+                write('tasks', task_hash)
+            end
+            #-------------
         end
 
         def read(sql)
@@ -25,26 +58,30 @@ module Database
         end
 
         def write(tbl, hash_data, cleanup=false)
-            questions = '?'
-            looop = hash_data.length-1
-            looop.times{questions.prepend('?, ')}
-            values = hash_data.keys.map{|a| a.to_s}.to_s[1..-2].sub(':', '').gsub('"', '')
+            if empty_or_unique_check(tbl, hash_data)
+                questions = '?'
+                looop = hash_data.length-1
+                looop.times{questions.prepend('?, ')}
+                values = hash_data.keys.map{|a| a.to_s}.to_s[1..-2].sub(':', '').gsub('"', '')
 
-            qry = "INSERT INTO"
-            qry+= ' '+tbl
-            qry+= ' ('+values+') '
-            qry+= 'VALUES ('+questions+')'
+                qry = "INSERT INTO #{tbl} (#{values}) VALUES (#{questions})"
 
-            array = []
-            keys = hash_data.keys
-            keys.each do |key|
-                array += [hash_data[key]]
+                array = []
+                keys = hash_data.keys
+                keys.each do |key|
+                    array += [hash_data[key]]
+                end
+                query("DELETE FROM #{tbl} WHERE 1") if cleanup
+                query(qry, array)
             end
-            query('DELETE FROM '+tbl+' WHERE 1') if cleanup
-            query(qry, array)
         end
 
         private
+
+        def empty_or_unique_check(tbl, hash_data)
+            check = read("select * from #{tbl} where id = '#{hash_data[:id]}'") if hash_data.key?(:id)
+            check = check.nil? || check.empty? ? true : false
+        end
 
         def query(sql, data = nil)
             @db.execute(sql, data)
