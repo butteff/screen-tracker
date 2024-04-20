@@ -7,7 +7,7 @@ class Track < Thor
   
   desc "status", "Show the existing status of the app."
   def status
-    puts "..."
+    io_get('status')
   end
 
   desc "settings :PARAMS", "Show or Set existing App's settings."
@@ -16,24 +16,24 @@ class Track < Thor
     io_get('settings')
   end
 
-  desc "show", "Show existing Clients."
-  def show
+  desc "clients", "Show existing Clients."
+  def clients
     io_get('clients')
   end
 
   desc "use CLIENT_ID", "Select a client with the ID provided."
   def use(client_id=nil)
-    puts "..."
+    io_set_one('status', 'client_id', client_id) if !client_id.nil?
   end
 
-  desc "list", "List all the existing tasks of a selected client."
-  def list
-    puts "..."
+  desc "tasks", "Show all the existing tasks of a selected client."
+  def tasks
+    io_get('tasks')
   end
 
   desc "pick :TASK_ID", "Pick the task for any future manipulations."
   def pick(task_id=nil)
-    puts "..."
+    io_set_one('status', 'task_id', task_id) if !task_id.nil?
   end
 
   desc "add :TEXT", "Add a new task and its description to a selected client."

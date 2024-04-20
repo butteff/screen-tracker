@@ -24,13 +24,29 @@ module Database
                 title varchar(128),
                 FOREIGN KEY(client_id) REFERENCES clients(id)
             );')
+            query('create table if not exists status (
+                client_id int, 
+                task_id int,
+                started_at datetime,
+                finished_at datetime,
+                FOREIGN KEY(client_id) REFERENCES clients(id)
+                FOREIGN KEY(task_id) REFERENCES tasks(id)
+            );')
             # ============ 
             
             # add default settings:
             setup = read('select * from settings')
             if setup.empty?
-                settings = {url: "https://track.butteff.ru", is_shot: 1, interval: 55}
+                settings = {url: "https://track.butteff.ru", is_shot: 1, interval: 5}
                 write('settings', settings)
+            end
+            # ============
+
+            # add default status:
+            status = read('select * from status')
+            if status.empty?
+                status = {client_id: nil, task_id: nil, started_at: nil, finished_at: nil}
+                write('status', status)
             end
             # ============
 
@@ -83,7 +99,7 @@ module Database
             check = check.nil? || check.empty? ? true : false
         end
 
-        def query(sql, data = nil)
+        def query(sql, data = [])
             @db.execute(sql, data)
         end
         

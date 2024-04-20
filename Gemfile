@@ -7,4 +7,4 @@ gem "thor"
 gem "sqlite3"
 #gem "singleton"
 gem "rainbow"
-gem 'is_valid', '~> 0.0.2'
+gem 'is_valid', '~> 0.0.9'

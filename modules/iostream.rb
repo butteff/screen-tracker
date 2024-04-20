@@ -10,6 +10,12 @@ module Iostream
             url: 'url',
             is_shot: 'boolean',
             interval: 'integer',
+        },
+        status: {
+            client_id: 'integer',
+            task_id: 'integer*',
+            started_at: 'nil',
+            finished_at: 'nil',
         }
     })
     @@COLOR_HEADER = 'coral'
@@ -19,12 +25,11 @@ module Iostream
     @@KEY_SPACERS = 20
     
     def io_set_one(tbl, key, value)
-        sql = 'select * from '+tbl
+        sql = "select * from #{tbl}"
         res = @@sqlt.read(sql)
         hash_data= res[0]
         hash_data[key] = value
-        
-        validation = @@valid.check_hash(hash_data, 'settings')
+        validation = @@valid.check_hash(hash_data, tbl)
         if validation == true
             @@sqlt.write(tbl, hash_data, true) 
         else
@@ -32,10 +37,11 @@ module Iostream
         end
     end
 
-    def io_get(tbl, and_print=true)
-        sql = 'select * from '+tbl
+    def io_get(tbl, where=false)
+        sql = "select * from #{tbl}"
+        sql += " where #{where}" if where
         res = @@sqlt.read(sql)
-        send('print_'+tbl, res) if and_print
+        send('print_'+tbl, res)
     end
 
     def print_settings(res)
@@ -76,6 +82,14 @@ module Iostream
     end
 
     def print_clients(res)
+        p res
+    end
+
+    def print_tasks(res)
+        p res
+    end
+
+    def print_status(res)
         p res
     end
 end    
