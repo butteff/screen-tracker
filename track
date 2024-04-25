@@ -1,13 +1,20 @@
 #!/usr/bin/env ruby
 require 'thor'
 require_relative 'modules/iostream.rb'
+require_relative 'modules/views.rb'
 include Iostream
+include Views
 
 class Track < Thor  
   
   desc "status", "Show the existing status of the app."
   def status
-    io_get('status')
+    status = io_get_raw('status')&.first
+    if !status['client_id'].nil?
+      clients = io_get_raw('clients') 
+      tasks = io_get_raw('tasks', "client_id = #{status['client_id']}")
+    end
+    print_status(status, clients, tasks)
   end
 
   desc "settings :PARAMS", "Show or Set existing App's settings."
@@ -28,7 +35,8 @@ class Track < Thor
 
   desc "tasks", "Show all the existing tasks of a selected client."
   def tasks
-    io_get('tasks')
+    data = io_get_raw('status')&.first
+    io_get('tasks', "client_id = #{data['client_id']}") if !data['client_id'].nil?
   end
 
   desc "pick :TASK_ID", "Pick the task for any future manipulations."

@@ -58,7 +58,11 @@ module Database
             #-------------
 
             # fetch tasks:
-            fetched_tasks = [{id: 1, client_id: 1, title: 'upload some code to github'}] #to do some API to fetch
+            fetched_tasks = [
+                {id: 1, client_id: 1, title: 'upload some code to github'}, 
+                {id: 2, client_id: 2, title: 'update something'}, 
+                {id: 3, client_id: 2, title: 'write some documentation'}
+            ]
             fetched_tasks.each do |task_hash|
                 write('tasks', task_hash)
             end
