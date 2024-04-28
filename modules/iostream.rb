@@ -44,4 +44,8 @@ module Iostream
         res = io_get_raw(tbl, where)
         send('print_'+tbl, res)
     end
+
+    def io_print(view)
+        send('print_'+view)
+    end
 end    

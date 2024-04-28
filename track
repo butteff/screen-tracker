@@ -36,7 +36,11 @@ class Track < Thor
   desc "tasks", "Show all the existing tasks of a selected client."
   def tasks
     data = io_get_raw('status')&.first
-    io_get('tasks', "client_id = #{data['client_id']}") if !data['client_id'].nil?
+    if !data['client_id'].nil?
+      io_get('tasks', "client_id = #{data['client_id']}") 
+    else
+      io_print('select_client_exception')
+    end
   end
 
   desc "pick :TASK_ID", "Pick the task for any future manipulations."

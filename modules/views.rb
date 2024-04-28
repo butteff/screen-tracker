@@ -49,26 +49,32 @@ module Views
     end
 
     def print_clients(clients)
+        if !clients.empty?
         clients.each do |client|
             text = Rainbow("[id] ").send(@@COLOR_KEY).ljust(@@KEY_SPACERS)
             text += client['id'].to_s.ljust(@@LOW_SPACERS)
             text += Rainbow(" Name: ").send(@@COLOR_HEADER)
-            text += client['name'].to_s
-          
+            text += client['name'].to_s  
             text += "\n"
             puts text
+        end
+        else
+            print_no_clients_exception
         end
     end
 
     def print_tasks(tasks)
-        tasks.each do |task|
-            text = Rainbow("[id] ").send(@@COLOR_KEY).ljust(@@KEY_SPACERS)
-            text += task['id'].to_s.ljust(@@LOW_SPACERS)
-            text += Rainbow(" Title: ").send(@@COLOR_HEADER)
-            text += task['title'].to_s
-          
-            text += "\n"
-            puts text
+        if !tasks.empty?
+            tasks.each do |task|
+                text = Rainbow("[id] ").send(@@COLOR_KEY).ljust(@@KEY_SPACERS)
+                text += task['id'].to_s.ljust(@@LOW_SPACERS)
+                text += Rainbow(" Title: ").send(@@COLOR_HEADER)
+                text += task['title'].to_s         
+                text += "\n"
+                puts text
+            end
+        else
+            print_no_tasks_exception
         end
     end
 
@@ -96,13 +102,46 @@ module Views
             text += Rainbow("  Started at: ").send(@@COLOR_HEADER).ljust(@@SPACERS)
             text += res['started_at'].to_s
             text += "\n"
-
             text += Rainbow("  Tracked: ").send(@@COLOR_HEADER).ljust(@@SPACERS)
             text += 'X mins'
             text += "\n"
         end
        
         puts text
+    end
 
+    # Exceptions:
+
+    def print_select_client_exception
+        text = Rainbow('You should select a client to see it\'s tasks.').send(@@COLOR_ERROR)
+        text += "\n"
+        text += 'Try '
+        text += Rainbow('[CLIENTS]').send(@@COLOR_HEADER)
+        text += ' + '
+        text += Rainbow('[USE]').send(@@COLOR_HEADER)
+        text += ' commands first.'
+        puts text
+    end
+
+    def print_no_clients_exception
+        text = Rainbow('There are no clients to select.').send(@@COLOR_ERROR)
+        text += "\n"
+        text += 'Try to use '
+        text += Rainbow('[PULL]').send(@@COLOR_HEADER)
+        text += ' command to download data from the server first.'
+        puts text
+    end
+
+    def print_no_tasks_exception
+        text = Rainbow('There are no tasks of the selected client.').send(@@COLOR_WARNING)
+        text += "\n"
+        text += 'Try to use '
+        text += Rainbow('[PULL]').send(@@COLOR_HEADER)
+        text += ' command to download data or '
+        text += Rainbow('[CLIENTS]').send(@@COLOR_HEADER)
+        text += ' + '
+        text += Rainbow('[USE]').send(@@COLOR_HEADER)
+        text += ' command to select another one.'
+        puts text
     end
 end    

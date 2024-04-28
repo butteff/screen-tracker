@@ -51,20 +51,30 @@ module Database
             # ============
 
             # fetch clients:
-            fetched_clients = [{id: 1, name: 'Google'}, {id: 2, name: 'Yandex'}] #to do some API to fetch
-            fetched_clients.each do |client_hash|
-                write('clients', client_hash)
+            clients = read('select * from clients')
+            if clients.empty? #to do some API to fetch
+                fetched_clients = [
+                    {id: 1, name: 'Google'},
+                    {id: 2, name: 'Yandex'}, 
+                    {id: 3, name: 'NoName Company'}, 
+                ]
+                fetched_clients.each do |client_hash|
+                    write('clients', client_hash)
+                end
             end
             #-------------
 
             # fetch tasks:
-            fetched_tasks = [
-                {id: 1, client_id: 1, title: 'upload some code to github'}, 
-                {id: 2, client_id: 2, title: 'update something'}, 
-                {id: 3, client_id: 2, title: 'write some documentation'}
-            ]
-            fetched_tasks.each do |task_hash|
-                write('tasks', task_hash)
+            tasks = read('select * from tasks')
+            if tasks.empty?
+                fetched_tasks = [
+                    {id: 1, client_id: 1, title: 'upload some code to github'}, 
+                    {id: 2, client_id: 2, title: 'update something'}, 
+                    {id: 3, client_id: 2, title: 'write some documentation'}
+                ]
+                fetched_tasks.each do |task_hash|
+                    write('tasks', task_hash)
+                end
             end
             #-------------
         end
