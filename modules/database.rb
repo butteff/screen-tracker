@@ -106,6 +106,13 @@ module Database
             end
         end
 
+        def check_exist(type, value, where=false)
+            sql = "select * from #{type}"
+            sql += " where #{where}" if where
+            values = self.read(sql)
+            has = values&.map{|ex| value.to_i == ex['id']}.include?(true)
+        end
+
         private
 
         def filter(val)

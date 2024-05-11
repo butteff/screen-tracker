@@ -133,7 +133,7 @@ module Views
     end
 
     def print_no_tasks_exception
-        text = Rainbow('There are no tasks of the selected client.').send(@@COLOR_WARNING)
+        text = Rainbow('There are no tasks of the selected client.').send(@@COLOR_ERROR)
         text += "\n"
         text += 'Try to use '
         text += Rainbow('[PULL]').send(@@COLOR_HEADER)

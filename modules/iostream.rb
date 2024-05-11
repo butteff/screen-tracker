@@ -21,16 +21,26 @@ module Iostream
     })
     
     def io_set_one(tbl, key, value)
-        sql = "select * from #{tbl}"
-        res = @@sqlt.read(sql)
-        hash_data= res[0]
-        hash_data[key] = value
-        validation = @@valid.check_hash(hash_data, tbl)
-        if validation == true
-            hash_data['task_id'] = nil if key == 'client_id'
-            @@sqlt.write(tbl, hash_data, true) 
+        where = false
+        if key == 'task_id'
+            status = io_get_raw('status')&.first
+            where = "client_id = #{status['client_id']}"
+        end
+        has_reference = @@sqlt.check_exist(key.gsub('_id', '')+'s', value, where) if key.end_with?('_id')
+        if has_reference
+            sql = "select * from #{tbl}"
+            res = @@sqlt.read(sql)
+            hash_data= res[0] if res
+            hash_data[key] = value
+            validation = @@valid.check_hash(hash_data, tbl)
+            if validation == true
+                hash_data['task_id'] = nil if key == 'client_id'
+                @@sqlt.write(tbl, hash_data, true) 
+            else
+                print_errors(validation)
+            end
         else
-            print_errors(validation)
+            send('print_no_'+key.gsub('_id', '')+'s_exception')
         end
     end
 
