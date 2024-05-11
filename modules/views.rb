@@ -144,4 +144,10 @@ module Views
         text += ' command to select another one.'
         puts text
     end
+
+    def print_wrong_key(key)
+        text = Rainbow("  Error: Wrong key #{key}").send(@@COLOR_ERROR)
+        text += "\n\n"
+        puts text
+    end
 end    

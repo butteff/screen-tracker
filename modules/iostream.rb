@@ -27,6 +27,7 @@ module Iostream
             where = "client_id = #{status['client_id']}"
         end
         has_reference = @@sqlt.check_exist(key.gsub('_id', '')+'s', value, where) if key.end_with?('_id')
+        has_reference = @@sqlt.check_key(tbl, key) if tbl == 'settings'
         if has_reference
             sql = "select * from #{tbl}"
             res = @@sqlt.read(sql)
@@ -40,7 +41,7 @@ module Iostream
                 print_errors(validation)
             end
         else
-            send('print_no_'+key.gsub('_id', '')+'s_exception')
+            tbl != 'settings' ? send('print_no_'+key.gsub('_id', '')+'s_exception') : print_wrong_key(key)
         end
     end
 

@@ -113,6 +113,17 @@ module Database
             has = values&.map{|ex| value.to_i == ex['id']}.include?(true)
         end
 
+        def check_key(tbl, key)
+            begin
+                res = true
+                sql = "select #{key} from #{tbl}"
+                values = self.read(sql)
+            rescue 
+                res = false
+            end
+            res
+        end
+
         private
 
         def filter(val)
