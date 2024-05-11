@@ -108,12 +108,18 @@ module Database
 
         private
 
+        def filter(val)
+            val.instance_of?(String) ? val.delete('"\'`') : val
+        end
+
         def empty_or_unique_check(tbl, hash_data)
             check = read("select * from #{tbl} where id = '#{hash_data[:id]}'") if hash_data.key?(:id)
             check = check.nil? || check.empty? ? true : false
         end
 
         def query(sql, data = [])
+            data.map!{|a| filter(a)}
+            sql = filter(sql)
             @db.execute(sql, data)
         end
         
