@@ -1,66 +1,67 @@
 #!/usr/bin/env ruby
+# frozen_string_literal: true
+
 require 'thor'
-require_relative 'modules/iostream.rb'
-require_relative 'modules/views.rb'
+require_relative 'modules/iostream'
+require_relative 'modules/views'
 include Iostream
 include Views
 
-class Track < Thor  
-  
-  desc "status", "Show the existing status of the app."
+class Track < Thor
+  desc 'status', 'Show the existing status of the app.'
   def status
     status = io_get_raw('status')&.first
-    if !status['client_id'].nil?
-      clients = io_get_raw('clients') 
+    unless status['client_id'].nil?
+      clients = io_get_raw('clients')
       tasks = io_get_raw('tasks', "client_id = #{status['client_id']}")
     end
     print_status(status, clients, tasks)
   end
 
-  desc "settings :PARAMS", "Show or Set existing App's settings."
-  def settings(key=nil, value=nil)  
+  desc 'settings :PARAMS', "Show or Set existing App's settings."
+  def settings(key = nil, value = nil)
     io_set_one('settings', key, value) if !key.nil? && !value.nil?
     io_get('settings')
   end
 
-  desc "clients", "Show existing Clients."
+  desc 'clients', 'Show existing Clients.'
   def clients
     io_get('clients')
   end
 
-  desc "use CLIENT_ID", "Select a client with the ID provided."
-  def use(client_id=nil)
-    io_set_one('status', 'client_id', client_id) if !client_id.nil?
+  desc 'use CLIENT_ID', 'Select a client with the ID provided.'
+  def use(client_id = nil)
+    io_set_one('status', 'client_id', client_id) unless client_id.nil?
   end
 
-  desc "tasks", "Show all the existing tasks of a selected client."
+  desc 'tasks', 'Show all the existing tasks of a selected client.'
   def tasks
     data = io_get_raw('status')&.first
     if !data['client_id'].nil?
-      io_get('tasks', "client_id = #{data['client_id']}") 
+      io_get('tasks', "client_id = #{data['client_id']}")
     else
       io_print('select_client_exception')
     end
   end
 
-  desc "pick :TASK_ID", "Pick the task for any future manipulations."
-  def pick(task_id=nil)
-    io_set_one('status', 'task_id', task_id) if !task_id.nil?
+  desc 'pick :TASK_ID', 'Pick the task for any future manipulations.'
+  def pick(task_id = nil)
+    io_set_one('status', 'task_id', task_id) unless task_id.nil?
   end
 
-  desc "add :TEXT", "Add a new task and its description to a selected client."
-  def add(task_name=nil)
+  desc 'add :TEXT', 'Add a new task and its description to a selected client.'
+  def add(task_name = nil)
     status = io_get_raw('status')&.first
-    if !status['client_id'].nil?  
-      io_add_row('tasks', {client_id: status['client_id'], title: task_name})
-    else 
+    if !status['client_id'].nil?
+      io_add_row('tasks', { client_id: status['client_id'], title: task_name })
+    else
       io_print('add_task_exception')
     end
     tasks
   end
 
-  desc "del :TASK_ID", "Delete a task with the ID provided."
-  def delete(task_id=nil)
+  desc 'del :TASK_ID', 'Delete a task with the ID provided.'
+  def delete(task_id = nil)
     data = io_get_raw('status')&.first
     check = data ? io_get_raw('tasks', "id = #{task_id} AND client_id = #{data['client_id']}") : []
     if !check.empty?
@@ -71,41 +72,40 @@ class Track < Thor
     tasks
   end
 
-  desc "start", "Start time tracking of a selected task."
+  desc 'start', 'Start time tracking of a selected task.'
   def start
-    puts "..."
+    puts '...'
   end
 
-  desc "stop", "Stop active time tracking."
+  desc 'stop', 'Stop active time tracking.'
   def stop
-    puts "..."
+    puts '...'
   end
 
-  desc "login", "Log in to the remote web interface."
+  desc 'login', 'Log in to the remote web interface.'
   def login
-    puts "..."
+    puts '...'
   end
 
-  desc "logout", "Log out from the remote web interface."
+  desc 'logout', 'Log out from the remote web interface.'
   def logout
-    puts "..."
+    puts '...'
   end
 
-  desc "push", "Push logs or/and tasks to the remote web interface."
+  desc 'push', 'Push logs or/and tasks to the remote web interface.'
   def push
-    puts "..."
+    puts '...'
   end
 
-  desc "pull", "Pull clients or/and tasks from the remote web interface."
+  desc 'pull', 'Pull clients or/and tasks from the remote web interface.'
   def pull
-    puts "..."
+    puts '...'
   end
 
-  desc "logs :FULL", "Show Logs of the selected task or full logs of all the client tasks."
-  def logs(full=false)
-    puts "..."
+  desc 'logs :FULL', 'Show Logs of the selected task or full logs of all the client tasks.'
+  def logs(_full = false)
+    puts '...'
   end
-  
 end
 
 Track.start(ARGV)
