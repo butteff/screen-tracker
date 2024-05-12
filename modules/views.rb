@@ -123,6 +123,28 @@ module Views
         puts text
     end
 
+    def print_add_task_exception
+        text = Rainbow('You should select a client to add it\'s tasks.').send(@@COLOR_ERROR)
+        text += "\n"
+        text += 'Try '
+        text += Rainbow('[CLIENTS]').send(@@COLOR_HEADER)
+        text += ' + '
+        text += Rainbow('[USE]').send(@@COLOR_HEADER)
+        text += ' commands first.'
+        puts text
+    end
+
+    def print_remove_task_exception
+        text = Rainbow('There is no task with this id for the Client.').send(@@COLOR_ERROR)
+        text += "\n"
+        text += 'Try '
+        text += Rainbow('[CLIENTS]').send(@@COLOR_HEADER)
+        text += ' + '
+        text += Rainbow('[USE]').send(@@COLOR_HEADER)
+        text += ' commands first.'
+        puts text
+    end
+
     def print_no_clients_exception
         text = Rainbow('There are no clients to select.').send(@@COLOR_ERROR)
         text += "\n"

@@ -106,6 +106,10 @@ module Database
             end
         end
 
+        def remove_by_id(tbl, id)
+            query("DELETE FROM #{tbl} WHERE id = #{id}")
+        end
+
         def check_exist(type, value, where=false)
             sql = "select * from #{type}"
             sql += " where #{where}" if where
@@ -131,7 +135,7 @@ module Database
         end
 
         def empty_or_unique_check(tbl, hash_data)
-            check = read("select * from #{tbl} where id = '#{hash_data[:id]}'") if hash_data.key?(:id)
+            check = read("select * from #{tbl} where id = '#{hash_data[:id]}'") if hash_data&.key?(:id)
             check = check.nil? || check.empty? ? true : false
         end
 

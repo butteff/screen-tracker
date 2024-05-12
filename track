@@ -50,12 +50,25 @@ class Track < Thor
 
   desc "add :TEXT", "Add a new task and its description to a selected client."
   def add(task_name=nil)
-    puts "..."
+    status = io_get_raw('status')&.first
+    if !status['client_id'].nil?  
+      io_add_row('tasks', {client_id: status['client_id'], title: task_name})
+    else 
+      io_print('add_task_exception')
+    end
+    tasks
   end
 
   desc "del :TASK_ID", "Delete a task with the ID provided."
   def delete(task_id=nil)
-    puts "..."
+    data = io_get_raw('status')&.first
+    check = data ? io_get_raw('tasks', "id = #{task_id} AND client_id = #{data['client_id']}") : []
+    if !check.empty?
+      io_del_row('tasks', task_id)
+    else
+      io_print('remove_task_exception')
+    end
+    tasks
   end
 
   desc "start", "Start time tracking of a selected task."

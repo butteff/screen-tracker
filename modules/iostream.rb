@@ -17,6 +17,11 @@ module Iostream
             task_id: 'integer*',
             started_at: 'nil',
             finished_at: 'nil',
+        },
+        tasks: {
+            id: 'integer*',
+            client_id: 'integer',
+            title: 'words',
         }
     })
     
@@ -46,6 +51,20 @@ module Iostream
             @@sqlt.write(tbl, hash_data, true) 
         else
             print_errors(validation)
+        end
+    end
+
+    def io_add_row(tbl, hash_data)
+        validation = @@valid.check_hash(hash_data, tbl)
+        if validation == true
+            @@sqlt.write(tbl, hash_data)
+        end
+    end
+
+    def io_del_row(tbl, id)
+        validation = @@valid.check(id, 'integer')
+        if validation == true
+            @@sqlt.remove_by_id(tbl, id)
         end
     end
 
