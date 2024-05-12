@@ -29,19 +29,23 @@ module Iostream
         has_reference = @@sqlt.check_exist(key.gsub('_id', '')+'s', value, where) if key.end_with?('_id')
         has_reference = @@sqlt.check_key(tbl, key) if tbl == 'settings'
         if has_reference
-            sql = "select * from #{tbl}"
-            res = @@sqlt.read(sql)
-            hash_data= res[0] if res
-            hash_data[key] = value
-            validation = @@valid.check_hash(hash_data, tbl)
-            if validation == true
-                hash_data['task_id'] = nil if key == 'client_id'
-                @@sqlt.write(tbl, hash_data, true) 
-            else
-                print_errors(validation)
-            end
+            io_set_row(tbl, key, value)
         else
             tbl != 'settings' ? send('print_no_'+key.gsub('_id', '')+'s_exception') : print_wrong_key(key)
+        end
+    end
+
+    def io_set_row(tbl, key, value)
+        sql = "select * from #{tbl}"
+        res = @@sqlt.read(sql)
+        hash_data= res.first
+        hash_data[key] = value
+        validation = @@valid.check_hash(hash_data, tbl)
+        if validation == true
+            hash_data['task_id'] = nil if key == 'client_id'
+            @@sqlt.write(tbl, hash_data, true) 
+        else
+            print_errors(validation)
         end
     end
 
