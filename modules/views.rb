@@ -156,6 +156,22 @@ module Views
     puts text
   end
 
+  def print_start_logs_exception
+    text = Rainbow('There is not selected task to start a time tracking.').send(@@COLOR_ERROR)
+    text += "\n"
+    text += 'Try to use '
+    text += Rainbow('[PULL]').send(@@COLOR_HEADER)
+    text += ' command to download data or '
+    text += Rainbow('[CLIENTS]').send(@@COLOR_HEADER)
+    text += ' + '
+    text += Rainbow('[USE]').send(@@COLOR_HEADER)
+    text += ' command to select a client'
+    text += ' + '
+    text += Rainbow('[PICK]').send(@@COLOR_HEADER)
+    text += ' command to select a task.'
+    puts text
+  end
+
   def print_no_tasks_exception
     text = Rainbow('There are no tasks of the selected client.').send(@@COLOR_ERROR)
     text += "\n"
@@ -165,7 +181,7 @@ module Views
     text += Rainbow('[CLIENTS]').send(@@COLOR_HEADER)
     text += ' + '
     text += Rainbow('[USE]').send(@@COLOR_HEADER)
-    text += ' command to select another one.'
+    text += ' command to select a client.'
     puts text
   end
 

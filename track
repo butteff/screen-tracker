@@ -74,7 +74,34 @@ class Track < Thor
 
   desc 'start', 'Start time tracking of a selected task.'
   def start
-    puts '...'
+    status = io_get_raw('status')&.first
+    settings = io_get_raw('settings')&.first
+    logs = []
+    if !status['client_id'].nil? && !status['task_id'].nil? && !settings['interval'].nil?
+      while 1 do
+        #char = STDIN.getc
+        #break if char == 'q'
+        sleep(settings['interval'].to_i)
+        timestamp = Time.now.to_i.to_s
+        file = false
+        if settings['is_shot'] == 1
+          file = 'screenshots/'+timestamp+'.png'
+          cmd = 'gnome-screenshot --file='+file
+          `#{cmd}`
+        end
+        log = {task_id: status['task_id'], client_id: status['client_id'], user_id: 1, timestamp: timestamp, screenshot: file}
+        io_add_row('logs', log)
+        p log
+      end
+    else
+      io_print('start_logs_exception')
+    end
+  end
+
+  desc 'logs :FULL', 'Show Logs of the selected task or full logs of all the client tasks.'
+  def logs(_full = false)
+    logs = io_get_raw('logs')
+    p logs
   end
 
   desc 'stop', 'Stop active time tracking.'
@@ -102,10 +129,6 @@ class Track < Thor
     puts '...'
   end
 
-  desc 'logs :FULL', 'Show Logs of the selected task or full logs of all the client tasks.'
-  def logs(_full = false)
-    puts '...'
-  end
 end
 
 Track.start(ARGV)

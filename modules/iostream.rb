@@ -9,7 +9,7 @@ include Views
 module Iostream
   @@sqlt = Sqlt.new
   @@valid = IsValid.new(
-    { # no linter
+    {
       settings: {
         url: 'url',
         is_shot: 'boolean',
@@ -22,9 +22,15 @@ module Iostream
         finished_at: 'nil'
       },
       tasks: {
-        id: 'integer*',
         client_id: 'integer',
         title: 'words'
+      },
+      logs: {
+        client_id: 'integer',
+        task_id: 'integer',
+        user_id: 'integer',
+        timestamp: 'integer',
+        screenshot: 'any'
       }
     }
   )

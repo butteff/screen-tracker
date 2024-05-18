@@ -1,4 +1,4 @@
-# frozen_string_literal: true
+# frozen_string_literal: false
 
 require 'sqlite3'
 # require 'singleton'
@@ -31,6 +31,16 @@ module Database
                 task_id int,
                 started_at datetime,
                 finished_at datetime,
+                FOREIGN KEY(client_id) REFERENCES clients(id)
+                FOREIGN KEY(task_id) REFERENCES tasks(id)
+            );')
+      query('create table if not exists logs (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                client_id int,
+                task_id int,
+                user_id int,
+                timestamp int,
+                screenshot varchar(256),
                 FOREIGN KEY(client_id) REFERENCES clients(id)
                 FOREIGN KEY(task_id) REFERENCES tasks(id)
             );')
@@ -78,7 +88,6 @@ module Database
       fetched_tasks.each do |task_hash|
         write('tasks', task_hash)
       end
-
       #-------------
     end
 
